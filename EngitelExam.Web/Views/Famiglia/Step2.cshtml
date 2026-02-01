@@ -1,45 +1,55 @@
 ﻿@model EngitelExam.Web.Models.ViewModels.Step2VeicoliVM
 
-<div class="d-flex align-items-center justify-content-center" style="min-height:100vh;">
+<div class="d-flex flex-column align-items-center justify-content-center" style="min-height:100vh;">
 
-    <div>
+    <div class="my-4">
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
 
-            <h2>Step 2 - Veicoli</h2>
-            <p class="mb-3">Setta i dati riguardo alle macchine possedute.</p>
+            <h2 class="mb-1">Step 2 - Veicoli</h2>
+            <p class="" style="">Setta i dati riguardo alle macchine possedute.</p>
+            @Html.ValidationSummary(
+                true,   // true = mostra SOLO errori model-level
+                "",
+                new { @class = "text-danger mb-3" }
+            )
 
-            <div class="mb-3">
+            <button type="submit" class="btn btn-primary mb-3">Continua</button>
+
+            <div class="d-flex align-items-center justify-content-center row row-cols-1 row-cols-sm-1 row-cols-md-3 row-cols-lg-4 g-3 " style="margin-left:-0.1rem; margin-right:-0.1rem;">
+
                 @for (int i = 0; i < Model.Veicoli.Count(); i++)
                 {
-                <fieldset class="mb-2">
-                    <legend>Veicolo @(i + 1)</legend>
+                    <div class="col">
+                        <fieldset class="m-3">
+                            <legend class="" style="margin-bottom:-0.1rem;">Veicolo @(i + 1)</legend>
 
-                    <div class="mb-2">
-                        @Html.LabelFor(m => m.Veicoli[i].Targa, new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.Veicoli[i].Targa, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Veicoli[i].Targa, "", new { @class = "text-danger" })
-                    </div>
+                            <div class="mb-2">
+                                @Html.LabelFor(m => m.Veicoli[i].Targa, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Veicoli[i].Targa, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Veicoli[i].Targa, "", new { @class = "text-danger" })
+                            </div>
 
-                    <div>
-                        @Html.LabelFor(m => m.Veicoli[i].Modello, new { @class = "form-label" })
-                        @Html.DropDownListFor(
-                            m => m.Veicoli[i].Modello,
-                            new SelectList( new[] {
-                                "FIAT Panda",
-                                "FORD Focus",
-                                "JEEP Renegade"
-                            }),
-                            "-- Select model --",
-                            new { @class = "form-select" }
-                        )
+                            <div>
+                                @Html.LabelFor(m => m.Veicoli[i].Modello, new { @class = "form-label" })
+                                @Html.DropDownListFor(
+                                    m => m.Veicoli[i].Modello,
+                                    new SelectList(new[] {
+                                        "FIAT Panda",
+                                        "FORD Focus",
+                                        "JEEP Renegade"
+                                    }),
+                                    "-- Select model --",
+                                    new { @class = "form-select" }
+                                )
+                            </div>
+                        </fieldset>
                     </div>
-                </fieldset>
                 }
             </div>
-             
-            <button type="submit">Riepilogo</button>
+
+
         }
     </div>
 

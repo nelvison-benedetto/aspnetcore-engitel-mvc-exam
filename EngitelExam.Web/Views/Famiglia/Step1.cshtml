@@ -1,14 +1,19 @@
 ﻿@model EngitelExam.Web.Models.ViewModels.Step1FamigliaVM
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
 
-    <div>
+    <div class="my-4">
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
 
             <h2 class="mb-1">Step 1 - Dati Famiglia</h2>
             <p class="mb-3">Inserisci i dati riguardo la tua famiglia e le macchine possedute.</p>
+            @Html.ValidationSummary(
+                true,   // true = mostra SOLO errori model-level
+                "",
+                new { @class = "text-danger mb-3" }
+            )
 
             <div class="mb-3">
                 <div class="mb-2">
@@ -30,7 +35,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-info">Avanti</button>
+            <button type="submit" class="btn btn-primary">Continua</button>
         }
     </div>
 

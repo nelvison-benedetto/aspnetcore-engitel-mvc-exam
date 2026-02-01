@@ -1,34 +1,48 @@
 ﻿@model EngitelExam.Web.Models.ViewModels.Step2VeicoliVM
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="d-flex align-items-center justify-content-center" style="min-height:100vh;">
 
-    <h2>Step 2 - Veicoli</h2>
+    <div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-    for (int i = 0; i < Model.Veicoli.Count(); i++)
-    {
-        <fieldset>
-            <legend>Veicolo @(i + 1)</legend>
+            <h2>Step 2 - Veicoli</h2>
+            <p class="mb-3">Setta i dati riguardo alle macchine possedute.</p>
 
-            <div>
-                @Html.LabelFor(m => m.Veicoli[i].Targa)
-                @Html.TextBoxFor(m => m.Veicoli[i].Targa)
-                @Html.ValidationMessageFor(m => m.Veicoli[i].Targa)
+            <div class="mb-3">
+                @for (int i = 0; i < Model.Veicoli.Count(); i++)
+                {
+                <fieldset class="mb-2">
+                    <legend>Veicolo @(i + 1)</legend>
+
+                    <div class="mb-2">
+                        @Html.LabelFor(m => m.Veicoli[i].Targa, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Veicoli[i].Targa, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Veicoli[i].Targa, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div>
+                        @Html.LabelFor(m => m.Veicoli[i].Modello, new { @class = "form-label" })
+                        @Html.DropDownListFor(
+                            m => m.Veicoli[i].Modello,
+                            new SelectList( new[] {
+                                "FIAT Panda",
+                                "FORD Focus",
+                                "JEEP Renegade"
+                            }),
+                            "-- Select model --",
+                            new { @class = "form-select" }
+                        )
+                    </div>
+                </fieldset>
+                }
             </div>
+             
+            <button type="submit">Riepilogo</button>
+        }
+    </div>
 
-            <div>
-                @Html.LabelFor(m => m.Veicoli[i].Modello)
-                @Html.DropDownListFor( m => m.Veicoli[i].Modello,
-                    new SelectList(new[] {
-                        "FIAT Panda",
-                        "FORD Focus",
-                        "JEEP Renegade"
-                    })
-                )
-            </div>
-        </fieldset>
-    }
+</div>
 
-    <button type="submit">Riepilogo</button>
-}
+

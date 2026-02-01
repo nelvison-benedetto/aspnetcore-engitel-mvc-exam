@@ -43,6 +43,7 @@
                                     "-- Select model --",
                                     new { @class = "form-select" }
                                 )
+                                @Html.ValidationMessageFor(m => m.Veicoli[i].Modello, "", new { @class="text-danger" })
                             </div>
                         </fieldset>
                     </div>

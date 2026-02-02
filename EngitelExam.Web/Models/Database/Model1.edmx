@@ -5,6 +5,22 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="Models.Database.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Appuntamento">
+          <Key>
+            <PropertyRef Name="AppuntamentoId" />
+          </Key>
+          <Property Name="AppuntamentoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsAvailable" Type="bit" Nullable="false" />
+          <Property Name="DayId" Type="int" Nullable="false" />
+          <Property Name="FamigliaId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Day">
+          <Key>
+            <PropertyRef Name="DayId" />
+          </Key>
+          <Property Name="DayId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TheDate" Type="date" Nullable="false" />
+        </EntityType>
         <EntityType Name="Famiglia">
           <Key>
             <PropertyRef Name="FamigliaId" />
@@ -30,6 +46,34 @@
           <Property Name="Targa" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Modello" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Appuntamento_Day">
+          <End Role="Day" Type="Self.Day" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Appuntamento" Type="Self.Appuntamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Day">
+              <PropertyRef Name="DayId" />
+            </Principal>
+            <Dependent Role="Appuntamento">
+              <PropertyRef Name="DayId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appuntamento_Famiglia">
+          <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Appuntamento" Type="Self.Appuntamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Famiglia">
+              <PropertyRef Name="FamigliaId" />
+            </Principal>
+            <Dependent Role="Appuntamento">
+              <PropertyRef Name="FamigliaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Person_Famiglia">
           <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -57,9 +101,19 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ModelsDatabaseStoreContainer">
+          <EntitySet Name="Appuntamento" EntityType="Self.Appuntamento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Day" EntityType="Self.Day" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Famiglia" EntityType="Self.Famiglia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Veicolo" EntityType="Self.Veicolo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Appuntamento_Day" Association="Self.FK_Appuntamento_Day">
+            <End Role="Day" EntitySet="Day" />
+            <End Role="Appuntamento" EntitySet="Appuntamento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appuntamento_Famiglia" Association="Self.FK_Appuntamento_Famiglia">
+            <End Role="Famiglia" EntitySet="Famiglia" />
+            <End Role="Appuntamento" EntitySet="Appuntamento" />
+          </AssociationSet>
           <AssociationSet Name="FK_Person_Famiglia" Association="Self.FK_Person_Famiglia">
             <End Role="Famiglia" EntitySet="Famiglia" />
             <End Role="Person" EntitySet="Person" />
@@ -74,6 +128,25 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Models.Database" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Appuntamento">
+          <Key>
+            <PropertyRef Name="AppuntamentoId" />
+          </Key>
+          <Property Name="AppuntamentoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsAvailable" Type="Boolean" Nullable="false" />
+          <Property Name="DayId" Type="Int32" Nullable="false" />
+          <Property Name="FamigliaId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Day" Relationship="Self.FK_Appuntamento_Day" FromRole="Appuntamento" ToRole="Day" />
+          <NavigationProperty Name="Famiglia" Relationship="Self.FK_Appuntamento_Famiglia" FromRole="Appuntamento" ToRole="Famiglia" />
+        </EntityType>
+        <EntityType Name="Day">
+          <Key>
+            <PropertyRef Name="DayId" />
+          </Key>
+          <Property Name="DayId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TheDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Appuntamento" Relationship="Self.FK_Appuntamento_Day" FromRole="Day" ToRole="Appuntamento" />
+        </EntityType>
         <EntityType Name="Famiglia">
           <Key>
             <PropertyRef Name="FamigliaId" />
@@ -81,6 +154,7 @@
           <Property Name="FamigliaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nome" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Componenti" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Appuntamento" Relationship="Self.FK_Appuntamento_Famiglia" FromRole="Famiglia" ToRole="Appuntamento" />
           <NavigationProperty Name="Person" Relationship="Self.FK_Person_Famiglia" FromRole="Famiglia" ToRole="Person" />
         </EntityType>
         <EntityType Name="Person">
@@ -103,6 +177,34 @@
           <Property Name="Modello" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Person" Relationship="Self.FK_Person_Veicolo" FromRole="Veicolo" ToRole="Person" />
         </EntityType>
+        <Association Name="FK_Appuntamento_Day">
+          <End Role="Day" Type="Self.Day" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Appuntamento" Type="Self.Appuntamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Day">
+              <PropertyRef Name="DayId" />
+            </Principal>
+            <Dependent Role="Appuntamento">
+              <PropertyRef Name="DayId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appuntamento_Famiglia">
+          <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Appuntamento" Type="Self.Appuntamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Famiglia">
+              <PropertyRef Name="FamigliaId" />
+            </Principal>
+            <Dependent Role="Appuntamento">
+              <PropertyRef Name="FamigliaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Person_Famiglia">
           <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -130,9 +232,19 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="EngitelDbContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Appuntamento" EntityType="Self.Appuntamento" />
+          <EntitySet Name="Day" EntityType="Self.Day" />
           <EntitySet Name="Famiglia" EntityType="Self.Famiglia" />
           <EntitySet Name="Person" EntityType="Self.Person" />
           <EntitySet Name="Veicolo" EntityType="Self.Veicolo" />
+          <AssociationSet Name="FK_Appuntamento_Day" Association="Self.FK_Appuntamento_Day">
+            <End Role="Day" EntitySet="Day" />
+            <End Role="Appuntamento" EntitySet="Appuntamento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appuntamento_Famiglia" Association="Self.FK_Appuntamento_Famiglia">
+            <End Role="Famiglia" EntitySet="Famiglia" />
+            <End Role="Appuntamento" EntitySet="Appuntamento" />
+          </AssociationSet>
           <AssociationSet Name="FK_Person_Famiglia" Association="Self.FK_Person_Famiglia">
             <End Role="Famiglia" EntitySet="Famiglia" />
             <End Role="Person" EntitySet="Person" />
@@ -148,6 +260,24 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ModelsDatabaseStoreContainer" CdmEntityContainer="EngitelDbContext">
+          <EntitySetMapping Name="Appuntamento">
+            <EntityTypeMapping TypeName="Models.Database.Appuntamento">
+              <MappingFragment StoreEntitySet="Appuntamento">
+                <ScalarProperty Name="AppuntamentoId" ColumnName="AppuntamentoId" />
+                <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
+                <ScalarProperty Name="DayId" ColumnName="DayId" />
+                <ScalarProperty Name="FamigliaId" ColumnName="FamigliaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Day">
+            <EntityTypeMapping TypeName="Models.Database.Day">
+              <MappingFragment StoreEntitySet="Day">
+                <ScalarProperty Name="DayId" ColumnName="DayId" />
+                <ScalarProperty Name="TheDate" ColumnName="TheDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Famiglia">
             <EntityTypeMapping TypeName="Models.Database.Famiglia">
               <MappingFragment StoreEntitySet="Famiglia">

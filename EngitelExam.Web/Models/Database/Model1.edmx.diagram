@@ -4,10 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="8ccaace5ce8b40beba2d65a300ef62f2" Name="Diagram1">
-        <EntityTypeShape EntityType="Models.Database.Famiglia" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Models.Database.Person" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="Models.Database.Veicolo" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+      <Diagram DiagramId="3447e665e7f44d4ea3817a970db506f1" Name="Diagram1">
+        <EntityTypeShape EntityType="Models.Database.Appuntamento" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Database.Day" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Database.Famiglia" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Database.Person" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.Database.Veicolo" Width="1.5" PointX="0.75" PointY="7.375" IsExpanded="true" />
+        <AssociationConnector Association="Models.Database.FK_Appuntamento_Day" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.Database.FK_Appuntamento_Famiglia" ManuallyRouted="false" />
         <AssociationConnector Association="Models.Database.FK_Person_Famiglia" ManuallyRouted="false" />
         <AssociationConnector Association="Models.Database.FK_Person_Veicolo" ManuallyRouted="false" />
       </Diagram>

@@ -25,6 +25,8 @@ namespace EngitelExam.Web.Models.Database
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Appuntamento> Appuntamento { get; set; }
+        public virtual DbSet<Day> Day { get; set; }
         public virtual DbSet<Famiglia> Famiglia { get; set; }
         public virtual DbSet<Person> Person { get; set; }
         public virtual DbSet<Veicolo> Veicolo { get; set; }

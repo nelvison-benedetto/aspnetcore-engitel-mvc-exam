@@ -12,22 +12,18 @@ namespace EngitelExam.Web.Models.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Famiglia
+    public partial class Day
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Famiglia()
+        public Day()
         {
             this.Appuntamento = new HashSet<Appuntamento>();
-            this.Person = new HashSet<Person>();
         }
     
-        public int FamigliaId { get; set; }
-        public string Nome { get; set; }
-        public int Componenti { get; set; }
+        public int DayId { get; set; }
+        public System.DateTime TheDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appuntamento> Appuntamento { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Person> Person { get; set; }
     }
 }

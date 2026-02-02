@@ -86,13 +86,21 @@ namespace EngitelExam.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Conferma()   //async Task x uso DB x requests I/O
         {
-            var step1 = Session["Step1"] as Step1FamigliaVM;
-            var step2 = Session["Step2"] as Step2VeicoliVM;
-            int famigliaId = await _famigliaService.SaveFamigliaAsync( step1, step2 );
-            await _calendarioService.AddAppuntamentoAsync(step1.DayId, famigliaId);
+            try 
+            {
+                var step1 = Session["Step1"] as Step1FamigliaVM;
+                var step2 = Session["Step2"] as Step2VeicoliVM;
+                int famigliaId = await _famigliaService.SaveFamigliaAsync(step1, step2);
+                await _calendarioService.AddAppuntamentoAsync(step1.DayId, famigliaId);
                 //creo appuntamento legato a quel giorno!!!
-            Session.Clear();  //PULISCI SESSIONE!!
-            return RedirectToAction(nameof(Elenco));
+                Session.Clear();  //PULISCI SESSIONE!!
+                return RedirectToAction(nameof(Elenco));
+            }
+            catch (InvalidOperationException ex)  //catturi l'errore generato
+            {
+                ModelState.AddModelError("", ex.Message);
+                return RedirectToAction(nameof(Step1));
+            }
         }
         
         [HttpGet]

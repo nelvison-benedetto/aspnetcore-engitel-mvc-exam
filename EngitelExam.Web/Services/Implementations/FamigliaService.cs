@@ -41,18 +41,21 @@ namespace EngitelExam.Web.Services.Implementations
             using (var db = new EngitelDbContext()) {
                 db.Database.Log = msg => Console.WriteLine(msg);
 
+                var appuntamento = await db.Appuntamento
+                    .FindAsync(step1.AppuntamentoId);
+                if (appuntamento == null || appuntamento.Status != AppuntamentoStatus.Booked.ToString())
+                {
+                    throw new InvalidOperationException( "Appuntamento non valido o già completato");
+                }
+
                 var famiglia = new Famiglia
                 {
                     Nome = step1.NomeFamiglia,
                     Componenti = step1.NumeroComponenti
                 };
                 db.Famiglia.Add(famiglia);  //aggiungi, cmnq non ancora salvate su db.
-                var appuntamento = await db.Appuntamento
-                    .FindAsync(step1.AppuntamentoId);
-                if (appuntamento != null)
-                {
-                    appuntamento.Status = AppuntamentoStatus.Completed.ToString();
-                }
+
+                appuntamento.Status = AppuntamentoStatus.Completed.ToString();
 
                 foreach (var v in step2.Veicoli)
                 {
@@ -70,6 +73,7 @@ namespace EngitelExam.Web.Services.Implementations
                         Veicolo = veicolo
                     });
                 }
+
                 await db.SaveChangesAsync();
                 return famiglia.FamigliaId;
             }

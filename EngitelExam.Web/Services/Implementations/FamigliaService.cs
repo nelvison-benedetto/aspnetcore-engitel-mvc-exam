@@ -1,4 +1,5 @@
-﻿using EngitelExam.Web.Models.Database;
+﻿using EngitelExam.Web.Enums;
+using EngitelExam.Web.Models.Database;
 using EngitelExam.Web.Models.ViewModels;
 using EngitelExam.Web.Services.Contracts;
 using System;
@@ -46,7 +47,13 @@ namespace EngitelExam.Web.Services.Implementations
                     Componenti = step1.NumeroComponenti
                 };
                 db.Famiglia.Add(famiglia);  //aggiungi, cmnq non ancora salvate su db.
-                await db.SaveChangesAsync();
+                var appuntamento = await db.Appuntamento
+                    .FindAsync(step1.AppuntamentoId);
+                if (appuntamento != null)
+                {
+                    appuntamento.Status = AppuntamentoStatus.Completed.ToString();
+                }
+
                 foreach (var v in step2.Veicoli)
                 {
                     var veicolo = new Veicolo
@@ -55,11 +62,12 @@ namespace EngitelExam.Web.Services.Implementations
                         Modello = v.Modello
                     };
                     db.Veicolo.Add(veicolo);
-                    await db.SaveChangesAsync();
                     db.Person.Add(new Person
                     {
-                        FamigliaId = famiglia.FamigliaId,
-                        VeicoloId = veicolo.VeicoloId
+                        //FamigliaId = famiglia.FamigliaId,
+                        //VeicoloId = veicolo.VeicoloId
+                        Famiglia = famiglia,  //usa navigation generate da .net nel file .cs
+                        Veicolo = veicolo
                     });
                 }
                 await db.SaveChangesAsync();

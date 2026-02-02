@@ -9,6 +9,7 @@ namespace EngitelExam.Web.Models.ViewModels
     public class Step1FamigliaVM
     {
         public int DayId { get; set; }
+        public int AppuntamentoId { get; set; }
 
         [Display(Name = "Nome della famiglia")]  //renderizzato da LabelFor in view razor (Step1.cshtml)
         [Required, StringLength(50)]

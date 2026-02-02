@@ -1,38 +1,53 @@
 ﻿@model IEnumerable<EngitelExam.Web.Models.ViewModels.AppuntamentoVM>
 
 <div style="min-height:100vh;" class="d-flex flex-column align-items-center justify-content-center">
-    <div class="table-responsive mb-4">
 
-        <table border="0" class="table table-striped table-bordered align-middle">
+    <h2 class="mb-4">Appuntamenti del giorno</h2>
+
+    <div class="table-responsive mb-4">
+        <table class="table table-striped table-bordered align-middle">
             <thead class="table-light">
                 <tr>
                     <th>Famiglia</th>
                     <th>Status</th>
-                    <th></th>
+                    <th class="text-center">Azioni</th>
                 </tr>
             </thead>
-            
+
             <tbody>
                 @foreach (var a in Model)
                 {
                     <tr>
                         <td>@a.NomeFamiglia</td>
-                        <td>@a.Status</td>
                         <td>
+                            <span class="badge bg-primary">
+                                @a.Status
+                            </span>
+                        </td>
+                        <td class="text-center">
                             @if (a.Status == "Booked")
                             {
                                 @Html.ActionLink(
                                     "Disdici",
-                                    "Cancel",  /*Action of the controller*/
-                                    new { id = a.AppuntamentoId },
-                                    new { @class = "btn btn-danger btn-sm" })
+                                    "Cancel",  //action del controller
+                                    "Calendario",
+                                    new { appuntamentoId = a.AppuntamentoId },
+                                    new { @class = "btn btn-danger btn-sm me-2" })
+
+                                @Html.ActionLink(
+                                    "Complete",
+                                    "Step1",
+                                    "Famiglia",
+                                    new { dayId = a.DayId, appuntamentoId = a.AppuntamentoId },
+                                    new { @class = "btn btn-success btn-sm" })
                             }
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-
     </div>
+
 </div>
+
 

@@ -49,6 +49,12 @@ namespace EngitelExam.Web.Controllers
             return RedirectToAction(nameof(Calendario));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Cancel(int appuntamentoId)
+        {
+            await _calendarioService.CancelAppuntamentoAsync(appuntamentoId);
+            return RedirectToAction(nameof(Calendario));
+        }
 
     }
 }

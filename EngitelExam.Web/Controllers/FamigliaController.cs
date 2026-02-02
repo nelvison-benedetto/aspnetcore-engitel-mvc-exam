@@ -34,9 +34,9 @@ namespace EngitelExam.Web.Controllers
 
         //here non metto async Task xk intanto non uso DB! quindi non fetcho nulla
         [HttpGet]
-        public ActionResult Step1(int dayId)
+        public ActionResult Step1(int dayId, int appuntamentoId)
         {
-            return View(new Step1FamigliaVM { DayId = dayId });
+            return View(new Step1FamigliaVM { DayId = dayId, AppuntamentoId = appuntamentoId });
         }
         
         [HttpPost]

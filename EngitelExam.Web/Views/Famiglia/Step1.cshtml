@@ -7,7 +7,9 @@
         {
             @Html.AntiForgeryToken()
 
-            @Html.HiddenFor(m => m.DayId)  //nascosto, ma viene salvato nel submit cosi viene salvato nella Session!!
+            @Html.HiddenFor(m => m.DayId)  //nascosto, ma viene salvato nel submit cosi viene salvato nella Session!! link appuntamento-day-famiglia in Conferma() di famigliacontroller
+            @Html.HiddenFor(m=> m.AppuntamentoId)
+
             <h2 class="mb-1">Step 1 - Dati Famiglia</h2>
             <p class="mb-3">Inserisci i dati riguardo la tua famiglia e le macchine possedute.</p>
             @Html.ValidationSummary(

@@ -1,33 +1,53 @@
 ﻿@model EngitelExam.Web.Models.ViewModels.RiepilogoFamigliaVM
 
-<h2>Riepilogo</h2>
+<div style="min-height:100vh;" class="d-flex flex-column align-items-center justify-content-center">
 
-<h3>Famiglia</h3>
-<ul>
-    <li><strong>Nome:</strong> @Model.Famiglia.NomeFamiglia</li>
-    <li><strong>Componenti:</strong> @Model.Famiglia.NumeroComponenti</li>
-    <li><strong>Con veicolo:</strong> @Model.Famiglia.NumeroComponentiWCar</li>
-</ul>
+    <h2 class="mb-1"s>Riepilogo</h2>
+    <p>Controlla che tutti i dati siano corretti, se sono corretti salva sul Database.</p>
 
-<h3>Veicoli</h3>
-<table border="1">
-    <tr>
-        <th>Targa</th>
-        <th>Modello</th>
-    </tr>
-    @foreach (var v in Model.Veicoli)
-    {
-        <tr>
-            <td>@v.Targa</td>
-            <td>@v.Modello</td>
-        </tr>
-    }
-</table>
+    <h4 class="mb-2">Famiglia</h4>
+    <ul class="list-group mb-4">
+        <li class="list-group-item d-flex justify-content-between"><strong>Nome:</strong> @Model.Famiglia.NomeFamiglia</li>
+        <li class="list-group-item d-flex justify-content-between"><strong>Componenti:</strong> @Model.Famiglia.NumeroComponenti</li>
+        <li class="list-group-item d-flex justify-content-between"><strong>Con veicolo:</strong> @Model.Famiglia.NumeroComponentiWCar</li>
+    </ul>
 
-@using (Html.BeginForm("Conferma", "Famiglia", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <button type="submit">Conferma</button>
-}
+    <h4 class="mb-2">Veicoli</h4>
+    <div class="table-responsive mb-4">
+        <table border="0" class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Targa</th>
+                    <th>Modello</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model.Veicoli)
+                {
+                    <tr>
+                        <td>@v.Targa</td>
+                        <td>@v.Modello</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="d-flex gap-2">
+        @using (Html.BeginForm("Conferma", "Famiglia", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-primary">
+                Salva
+            </button>
+        }
+        @Html.ActionLink(
+            "Annulla",
+            "Step1",
+            null,
+            new { @class = "btn btn-outline-secondary" }
+        )
+    </div>
 
-@Html.ActionLink("Annulla", "Step1")
+</div>
+

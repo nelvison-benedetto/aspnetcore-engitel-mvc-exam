@@ -69,6 +69,7 @@ namespace EngitelExam.Web.Services.Implementations
         public async Task<IEnumerable<FamigliaListItemVM>> GetAllFamiglie()
         {
             using ( var db = new EngitelDbContext() ) {
+                db.Database.Log = msg => Console.WriteLine(msg);
                 return await db.Famiglia
                 .Select(f => new FamigliaListItemVM
                 {
@@ -80,7 +81,6 @@ namespace EngitelExam.Web.Services.Implementations
                 .ToListAsync();
             }
         }
-
 
 
     }

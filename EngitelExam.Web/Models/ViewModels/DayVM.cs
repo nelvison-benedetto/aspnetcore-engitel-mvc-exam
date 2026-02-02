@@ -10,7 +10,7 @@ namespace EngitelExam.Web.Models.ViewModels
         public int DayId { get; set; }
         public DateTime Date { get; set; }
         public bool IsAvailable { get; set; }
-        public bool hasAppointment { get; set; }
+        public int AppuntamentiCount { get; set; }
 
     }
 }

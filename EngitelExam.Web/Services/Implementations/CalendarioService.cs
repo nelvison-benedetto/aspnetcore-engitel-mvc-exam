@@ -1,4 +1,5 @@
-﻿using EngitelExam.Web.Models.Database;
+﻿using EngitelExam.Web.Enums;
+using EngitelExam.Web.Models.Database;
 using EngitelExam.Web.Models.ViewModels;
 using EngitelExam.Web.Services.Contracts;
 using System;
@@ -32,8 +33,10 @@ namespace EngitelExam.Web.Services.Implementations
                     {
                         DayId = d.DayId,
                         Date = d.TheDate,
-                        hasAppointment = d.Appuntamento.Any(),  //true se almeno 1 exists
-                        IsAvailable = !d.Appuntamento.Any(a => a.IsAvailable == false)  
+                        AppuntamentiCount = d.Appuntamento.Count(a=>a.Status=="Booked"),
+                        IsAvailable = true
+                        //hasAppointment = d.Appuntamento.Any(),  //true se almeno 1 exists
+                        //IsAvailable = !d.Appuntamento.Any(a => a.IsAvailable == false)  
                             //IsAvailable is true se  "nessun nessuno soddisfa la condizione",(leggi tutto senza '!' e poi infine considera il ! invertendo il boolean)
                     }).ToList()
                 };
@@ -44,13 +47,14 @@ namespace EngitelExam.Web.Services.Implementations
         {
             using (var db = new EngitelDbContext())
             {
+                db.Database.Log = msg => Console.WriteLine(msg);
                 var day = db.Day.FindAsync(dayId);
                 if (day == null) return null;
                 var appuntamento = new Appuntamento
                 {
                     DayId = dayId,
                     FamigliaId = famigliaId,
-                    IsAvailable = false,
+                    Status = AppuntamentoStatus.Booked.ToString(),  //uso di enum
                 };
                 db.Appuntamento.Add(appuntamento);
                 await db.SaveChangesAsync();
@@ -59,8 +63,20 @@ namespace EngitelExam.Web.Services.Implementations
                     AppuntamentoId = appuntamento.AppuntamentoId,
                     FamigliaId = appuntamento.FamigliaId,
                     DayId = appuntamento.DayId,
-                    IsAvailable = appuntamento.IsAvailable
+                    Status = appuntamento.Status,
                 };
+            }
+        }
+
+        public async Task CancelAppuntamentoAsync(int appuntamentoId)
+        {
+            using (var db = new EngitelDbContext())
+            {
+                db.Database.Log = msg => Console.WriteLine(msg);
+                var appuntamento = await db.Appuntamento.FindAsync(appuntamentoId);  //await!!
+                if (appuntamento == null) return;
+                appuntamento.Status = AppuntamentoStatus.Cancelled.ToString();  //uso di enum!
+                await db.SaveChangesAsync();
             }
         }
 

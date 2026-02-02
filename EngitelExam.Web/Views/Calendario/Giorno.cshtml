@@ -1,28 +1,38 @@
 ﻿@model IEnumerable<EngitelExam.Web.Models.ViewModels.AppuntamentoVM>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Famiglia</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-    </thead>
+<div style="min-height:100vh;" class="d-flex flex-column align-items-center justify-content-center">
+    <div class="table-responsive mb-4">
 
-    <tbody>
-        @foreach (var a in Model)
-        {
-            <tr>
-                <td>@a.NomeFamiglia</td>
-                <td>@a.Status</td>
-                <td>
-                    @if (a.Status == "Booked")
-                    {
-                        @Html.ActionLink("Disdici", "Cancel", new { id = a.AppuntamentoId },
-                            new { @class = "btn btn-danger btn-sm" })
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <table border="0" class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Famiglia</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td>@a.NomeFamiglia</td>
+                        <td>@a.Status</td>
+                        <td>
+                            @if (a.Status == "Booked")
+                            {
+                                @Html.ActionLink(
+                                    "Disdici",
+                                    "Cancel",  /*Action of the controller*/
+                                    new { id = a.AppuntamentoId },
+                                    new { @class = "btn btn-danger btn-sm" })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+

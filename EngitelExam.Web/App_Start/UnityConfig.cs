@@ -18,6 +18,7 @@ namespace EngitelExam.Web
             // e.g. container.RegisterType<ITestService, TestService>();
 
             container.RegisterType<IFamigliaService, FamigliaService>();
+            container.RegisterType<ICalendarioService, CalendarioService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

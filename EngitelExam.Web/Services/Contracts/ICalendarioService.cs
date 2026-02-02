@@ -1,4 +1,5 @@
-﻿using EngitelExam.Web.Models.ViewModels;
+﻿using EngitelExam.Web.Models.Database;
+using EngitelExam.Web.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace EngitelExam.Web.Services.Contracts
     public interface ICalendarioService
     {
         Task<CalendarioVM> GetCalendarioMeseAsync(int year, int month);
+        Task<IEnumerable<AppuntamentoVM>> GetAppuntamentiPerGiornoAsync(int dayId);
         Task<AppuntamentoVM> AddAppuntamentoAsync(int dayId, int famigliaId);
+        Task CancelAppuntamentoAsync(int appuntamentoId);
     }
 }

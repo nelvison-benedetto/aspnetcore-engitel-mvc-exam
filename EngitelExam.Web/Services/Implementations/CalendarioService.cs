@@ -43,16 +43,22 @@ namespace EngitelExam.Web.Services.Implementations
             }
         }
 
-        public async Task<IEnumerable<>> GetAppuntamentiPerGiornoAsync(dayId)
+        public async Task<IEnumerable<AppuntamentoVM>> GetAppuntamentiPerGiornoAsync(int dayId)
         {
             using (var db = new EngitelDbContext())
             {
                 db.Database.Log = msg => Console.WriteLine(msg);
-                return await db.Day
-                    .Select(x => new
-                    {
-
-                    });
+                var appuntamenti = await db.Appuntamento
+                    .Where(a=> a.DayId == dayId)
+                    .Include(a=>a.Famiglia)
+                    .ToListAsync();
+                return appuntamenti.Select(a=> new AppuntamentoVM { 
+                    AppuntamentoId = a.AppuntamentoId,
+                    DayId = a.DayId,
+                    FamigliaId = a.FamigliaId,
+                    Status = a.Status,
+                    NomeFamiglia = a.Famiglia.Nome,
+                });
             }
         }
 

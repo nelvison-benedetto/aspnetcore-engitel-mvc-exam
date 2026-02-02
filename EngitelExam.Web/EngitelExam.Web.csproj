@@ -183,6 +183,7 @@
     <Compile Include="Models\ViewModels\CalendarioVM.cs" />
     <Compile Include="Models\ViewModels\DayVM.cs" />
     <Compile Include="Models\ViewModels\FamigliaListItemVM.cs" />
+    <Compile Include="Models\ViewModels\FissaAppuntamentoVM.cs" />
     <Compile Include="Models\ViewModels\RiepilogoFamigliaVM.cs" />
     <Compile Include="Models\ViewModels\Step1FamigliaVM.cs" />
     <Compile Include="Models\ViewModels\Step2VeicoliVM.cs" />
@@ -268,6 +269,7 @@
     <Content Include="Views\Famiglia\Elenco.cshtml" />
     <Content Include="Views\Calendario\Calendario.cshtml" />
     <Content Include="Views\Calendario\Giorno.cshtml" />
+    <Content Include="Views\Calendario\FissaAppuntamento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -16,7 +16,7 @@ namespace EngitelExam.Web.Models.Database
     {
         public int AppuntamentoId { get; set; }
         public int DayId { get; set; }
-        public int FamigliaId { get; set; }
+        public Nullable<int> FamigliaId { get; set; }
         public string Status { get; set; }
     
         public virtual Day Day { get; set; }

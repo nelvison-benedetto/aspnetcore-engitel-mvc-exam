@@ -13,7 +13,7 @@ namespace EngitelExam.Web.Services.Implementations
 {
     public class CalendarioService : ICalendarioService
     {
-
+        
         public async Task<CalendarioVM> GetCalendarioMeseAsync(int year, int month)
         {
             using (var db = new EngitelDbContext()) {
@@ -94,6 +94,30 @@ namespace EngitelExam.Web.Services.Implementations
                     Status = a.Status,
                     NomeFamiglia = a.Famiglia.Nome,
                 });
+            }
+        }
+
+        public async Task<AppuntamentoVM> FissaAppuntamentoAsync(FissaAppuntamentoVM model)
+        {
+            using (var db = new EngitelDbContext())
+            {
+                db.Database.Log = msg => Console.WriteLine(msg);
+                var appuntamento = new Appuntamento  //crei appuntamento 'vuoto'
+                {
+                    DayId = model.DayId,
+                    Status = AppuntamentoStatus.Booked.ToString(),
+                    FamigliaId = null,
+                };
+                db.Appuntamento.Add(appuntamento);
+                await db.SaveChangesAsync();
+                return new AppuntamentoVM
+                {
+                    AppuntamentoId = appuntamento.AppuntamentoId,
+                    DayId = appuntamento.DayId,
+                    FamigliaId = appuntamento.FamigliaId,
+                    Status = appuntamento.Status,
+                    NomeFamiglia = model.NomeFamiglia  //temporaneo, per la view
+                };
             }
         }
 

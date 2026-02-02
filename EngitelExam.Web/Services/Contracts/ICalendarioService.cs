@@ -14,5 +14,6 @@ namespace EngitelExam.Web.Services.Contracts
         Task<IEnumerable<AppuntamentoVM>> GetAppuntamentiPerGiornoAsync(int dayId);
         Task<AppuntamentoVM> AddAppuntamentoAsync(int dayId, int famigliaId);
         Task CancelAppuntamentoAsync(int appuntamentoId);
+        Task<AppuntamentoVM> FissaAppuntamentoAsync(FissaAppuntamentoVM model);
     }
 }

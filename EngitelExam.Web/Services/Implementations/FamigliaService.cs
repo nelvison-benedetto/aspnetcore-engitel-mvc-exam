@@ -47,7 +47,7 @@ namespace EngitelExam.Web.Services.Implementations
                 {
                     throw new InvalidOperationException( "Appuntamento non valido o già completato");
                 }
-
+                
                 var famiglia = new Famiglia
                 {
                     Nome = step1.NomeFamiglia,

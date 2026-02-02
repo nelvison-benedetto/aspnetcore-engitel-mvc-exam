@@ -11,7 +11,7 @@
           </Key>
           <Property Name="AppuntamentoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DayId" Type="int" Nullable="false" />
-          <Property Name="FamigliaId" Type="int" Nullable="false" />
+          <Property Name="FamigliaId" Type="int" />
           <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Day">
@@ -61,9 +61,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Appuntamento_Famiglia">
-          <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="0..1" />
           <End Role="Appuntamento" Type="Self.Appuntamento" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Famiglia">
@@ -134,7 +132,7 @@
           </Key>
           <Property Name="AppuntamentoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DayId" Type="Int32" Nullable="false" />
-          <Property Name="FamigliaId" Type="Int32" Nullable="false" />
+          <Property Name="FamigliaId" Type="Int32" />
           <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Day" Relationship="Self.FK_Appuntamento_Day" FromRole="Appuntamento" ToRole="Day" />
           <NavigationProperty Name="Famiglia" Relationship="Self.FK_Appuntamento_Famiglia" FromRole="Appuntamento" ToRole="Famiglia" />
@@ -192,9 +190,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Appuntamento_Famiglia">
-          <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Famiglia" Type="Self.Famiglia" Multiplicity="0..1" />
           <End Role="Appuntamento" Type="Self.Appuntamento" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Famiglia">

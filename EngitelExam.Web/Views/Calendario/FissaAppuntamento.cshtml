@@ -1,0 +1,30 @@
+﻿@model EngitelExam.Web.Models.ViewModels.FissaAppuntamentoVM
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.DayId)
+
+        <h2 class="mb-1">Fissa Appuntamento - Nome Famiglia</h2>
+        <p class="mb-3">Inserisci i dati riguardo il nome famiglia che si è prenotato per questo giorno.</p>
+        @Html.ValidationSummary(
+            true,   // true = mostra SOLO errori model-level (here arrivano solo errori NON associati a proprietà) e.g.quelli che aggiungi w ModelState.AddModelError()
+            "",
+            new { @class = "text-danger mb-3" }
+        )
+
+        <div class="mb-3">
+            <div class="mb-2">
+                @Html.LabelFor(m => m.NomeFamiglia, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.NomeFamiglia, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.NomeFamiglia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Continua</button>
+    }
+
+</div>

@@ -1,5 +1,7 @@
 ﻿using EngitelExam.Web.Models.Database;
+using EngitelExam.Web.Models.ViewModels;
 using EngitelExam.Web.Services.Contracts;
+using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,19 +43,35 @@ namespace EngitelExam.Web.Controllers
             return View(appuntamenti); // Model: IEnumerable<AppuntamentoVM>
         }
 
-        [HttpPost]
-        public async Task<ActionResult> PrenotaAppuntamento(int dayId, int famigliaId)
-        {
-            var appuntamento = await _calendarioService.AddAppuntamentoAsync(dayId, famigliaId);
-            if(appuntamento == null) return HttpNotFound();
-            return RedirectToAction(nameof(Calendario));
-        }
+        //[HttpPost]
+        //public async Task<ActionResult> PrenotaAppuntamento(int dayId, int famigliaId)
+        //{
+        //    if (!ModelState.IsValid) return View(model);
+        //    var appuntamento = await _calendarioService.AddAppuntamentoAsync(dayId, famigliaId);
+        //    if(appuntamento == null) return HttpNotFound();
+        //    return RedirectToAction(nameof(Calendario));
+        //}
 
         [HttpGet]
         public async Task<ActionResult> Cancel(int appuntamentoId)
         {
             await _calendarioService.CancelAppuntamentoAsync(appuntamentoId);
             return RedirectToAction(nameof(Calendario));
+        }
+
+        [HttpGet]
+        public ActionResult FissaAppuntamento(int dayId)
+        {
+            return View( new FissaAppuntamentoVM { DayId = dayId } );
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> FissaAppuntamento(FissaAppuntamentoVM model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            var fissaappuntamento = _calendarioService.FissaAppuntamentoAsync(model);
+            if(fissaappuntamento == null ) return HttpNotFound();
+            return RedirectToAction(nameof(Calendario));  //TODO savare NomeFamiglia su db!! magari su tab a partes
         }
 
     }

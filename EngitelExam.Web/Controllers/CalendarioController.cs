@@ -28,7 +28,7 @@ namespace EngitelExam.Web.Controllers
         public async Task<ActionResult> Calendario(int? year, int? month) 
         { 
             var today = DateTime.Today;
-            int y = year ?? today.Year;
+            int y = year ?? today.Year;  //se il valore a sx è null, usa valore a dx
             int m = month ?? today.Month;
             var calendario = await _calendarioService.GetCalendarioMeseAsync(y, m);
             return View(calendario);
@@ -37,12 +37,11 @@ namespace EngitelExam.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> PrenotaAppuntamento(int dayId, int famigliaId)
         {
-            using (var db = new EngitelDbContext())
-            { 
-                var day = db.Day.FindAsync(dayId);
-                if (day == null) return HttpNotFound();
-            }
+            var appuntamento = await _calendarioService.AddAppuntamentoAsync(dayId, famigliaId);
+            if(appuntamento == null) return HttpNotFound();
+            return RedirectToAction(nameof(Calendario));
         }
+
 
     }
 }

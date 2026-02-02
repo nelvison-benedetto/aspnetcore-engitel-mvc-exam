@@ -10,7 +10,7 @@ namespace EngitelExam.Web.Models.ViewModels
 
         public int Year { get; set; }
         public int Month { get; set; }
-        public IList<DayVM> Days { get; set; } = new IList<DayVM>();
+        public List<DayVM> Days { get; set; } = new List<DayVM>();
 
     }
 }

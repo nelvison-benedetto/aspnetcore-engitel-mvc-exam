@@ -20,11 +20,11 @@ namespace EngitelExam.Web.Services.Implementations
                 var firstDay = new DateTime(year, month, 1);
                 var lastDay = firstDay.AddMonths(1).AddDays(-1);
 
-                var days = db.Day
+                var days = await db.Day  //AWAIT xk fetchi dal db!!
                     .Where(d => d.TheDate >= firstDay && d.TheDate <= lastDay)
                     .Include(d => d.Appuntamento)
                     .ToListAsync();
-                var calendario = new CalendarioVM
+                return new CalendarioVM
                 {
                     Year = year,
                     Month = month,
@@ -32,11 +32,35 @@ namespace EngitelExam.Web.Services.Implementations
                     {
                         DayId = d.DayId,
                         Date = d.TheDate,
-                        hasAppointment = d.Appuntamento.Any(),
-                        IsAvailable = !d.Appuntamento.Any(a => a.IsAvailable == false)
+                        hasAppointment = d.Appuntamento.Any(),  //true se almeno 1 exists
+                        IsAvailable = !d.Appuntamento.Any(a => a.IsAvailable == false)  
+                            //IsAvailable is true se  "nessun nessuno soddisfa la condizione",(leggi tutto senza '!' e poi infine considera il ! invertendo il boolean)
                     }).ToList()
                 };
-                return calendario;
+            }
+        }
+
+        public async Task<AppuntamentoVM> AddAppuntamentoAsync(int dayId, int famigliaId)
+        {
+            using (var db = new EngitelDbContext())
+            {
+                var day = db.Day.FindAsync(dayId);
+                if (day == null) return null;
+                var appuntamento = new Appuntamento
+                {
+                    DayId = dayId,
+                    FamigliaId = famigliaId,
+                    IsAvailable = false,
+                };
+                db.Appuntamento.Add(appuntamento);
+                await db.SaveChangesAsync();
+                return new AppuntamentoVM
+                {
+                    AppuntamentoId = appuntamento.AppuntamentoId,
+                    FamigliaId = appuntamento.FamigliaId,
+                    DayId = appuntamento.DayId,
+                    IsAvailable = appuntamento.IsAvailable
+                };
             }
         }
 

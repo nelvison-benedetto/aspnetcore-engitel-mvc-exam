@@ -1,22 +1,75 @@
 ﻿@model EngitelExam.Web.Models.ViewModels.CalendarioVM
 
-<h2>@Model.Month / @Model.Year</h2>
+@{
+    // Mesi in italiano per visualizzazione
+    string[] mesi = { "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+                      "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre" };
+}
 
-<div class="row row-cols-7 g-2">
-    @foreach (var d in Model.Days)
-    {
-        <div class="col">
-            <div class="card text-center">
-                <div class="card-body">
-                    <strong>@d.Date.Day</strong>
-                    <div>@d.AppuntamentiCount appuntamenti</div>
+// Header calendario
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>@mesi[Model.Month - 1] @Model.Year</h2>
 
-                    <a class="btn btn-sm btn-outline-primary"
-                       href="@Url.Action("Giorno", new { dayId = d.DayId })">
-                        Apri
-                    </a>
+    <div>
+        <a href="@Url.Action("Calendario", new { year = Model.Year, month = Model.Month - 1 })"
+           class="btn btn-outline-secondary btn-sm">&lt; Precedente</a>
+        <a href="@Url.Action("Calendario", new { year = Model.Year, month = Model.Month + 1 })"
+           class="btn btn-outline-secondary btn-sm">Successivo &gt;</a>
+    </div>
+</div>
+
+@{
+    // Primo giorno del mese
+    var firstDayOfMonth = new DateTime(Model.Year, Model.Month, 1);
+    // Giorno della settimana (0=Sunday, 1=Monday, ...)
+    int startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+}
+
+<div class="calendar-container">
+    <div class="d-grid" style="grid-template-columns: repeat(7, 1fr); gap: 0.5rem;">
+        @* Intestazione giorni della settimana *@
+        <div class="text-center fw-bold">Dom</div>
+        <div class="text-center fw-bold">Lun</div>
+        <div class="text-center fw-bold">Mar</div>
+        <div class="text-center fw-bold">Mer</div>
+        <div class="text-center fw-bold">Gio</div>
+        <div class="text-center fw-bold">Ven</div>
+        <div class="text-center fw-bold">Sab</div>
+
+        @* Spazi vuoti prima del primo giorno *@
+        @for (int i = 0; i < startDayOfWeek; i++)
+        {
+            <div></div>
+        }
+
+        @* Caselle dei giorni *@
+        @foreach (var day in Model.Days)
+        {
+            string badgeClass = day.AppuntamentiCount > 0 ? "bg-primary" : "bg-light text-dark";
+            <div class="card text-center h-100">
+                <div class="card-body p-2">
+                    <div class="fw-bold">@day.Date.Day</div>
+                    <span class="badge @badgeClass">@day.AppuntamentiCount appuntamenti</span>
+                    <div class="mt-2">
+                        <a href="@Url.Action("Giorno", "Calendario", new { dayId = day.DayId })"
+                           class="btn btn-sm btn-outline-primary w-100">
+                            Dettagli
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
+
+<style>
+    .calendar-container .card {
+        min-height: 100px;
+        cursor: pointer;
+        transition: transform 0.15s;
+    }
+
+        .calendar-container .card:hover {
+            transform: scale(1.05);
+        }
+</style>

@@ -27,7 +27,7 @@
 
                             <div class="mb-2">
                                 @Html.LabelFor(m => m.Veicoli[i].Targa, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.Veicoli[i].Targa, new { @class = "form-control" })
+                                @Html.TextBoxFor(m => m.Veicoli[i].Targa, new { @class = "form-control", placeholder = "Inserisci il numero di targa" })
                                 @Html.ValidationMessageFor(m => m.Veicoli[i].Targa, "", new { @class = "text-danger" })
                             </div>
 

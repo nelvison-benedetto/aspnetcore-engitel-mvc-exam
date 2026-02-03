@@ -21,7 +21,7 @@
             <div class="mb-3">
                 <div class="mb-2">
                     @Html.LabelFor(m => m.NomeFamiglia, new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.NomeFamiglia, new { @class = "form-control" })
+                    @Html.TextBoxFor(m => m.NomeFamiglia, new { @class = "form-control", placeholder = "Inserisci il nome della famiglia" })
                     @Html.ValidationMessageFor(m => m.NomeFamiglia, "", new { @class = "text-danger" })
                 </div>
             </div>

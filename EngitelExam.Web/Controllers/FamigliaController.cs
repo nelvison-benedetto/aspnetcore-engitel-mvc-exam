@@ -1,13 +1,10 @@
-﻿using EngitelExam.Web.Models.ViewModels;
+﻿using EngitelExam.Web.Models.Database;
+using EngitelExam.Web.Models.ViewModels;
 using EngitelExam.Web.Services.Contracts;
-using EngitelExam.Web.Services.Implementations;
-using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace EngitelExam.Web.Controllers
 {
@@ -34,9 +31,24 @@ namespace EngitelExam.Web.Controllers
         
         //here non metto async Task xk intanto non uso DB! quindi non fetcho nulla
         [HttpGet]
-        public ActionResult Step1(int dayId, int? appuntamentoId)
+        public async Task<ActionResult> Step1(int dayId, int appuntamentoId, int famigliaId)
         {
-            return View(new Step1FamigliaVM { DayId = dayId, AppuntamentoId = appuntamentoId });
+            //return View(new Step1FamigliaVM { DayId = dayId, AppuntamentoId = appuntamentoId });
+            using (var db = new EngitelDbContext())
+            {
+                var appuntamento = await db.Appuntamento
+                    .Include(a => a.Famiglia)
+                    .FirstOrDefaultAsync(a => a.AppuntamentoId == appuntamentoId);
+                if (appuntamento == null)
+                    return HttpNotFound();
+                var model = new Step1FamigliaVM
+                {
+                    DayId = dayId,
+                    AppuntamentoId = appuntamentoId,
+                    NomeFamiglia = appuntamento.Famiglia.Nome
+                };
+                return View(model);
+            }
         }
         
         [HttpPost]

@@ -25,6 +25,10 @@ namespace EngitelExam.Web.Services.Implementations
                     .Where(d => d.TheDate >= firstDay && d.TheDate <= lastDay)
                     .Include(d => d.Appuntamento)
                     .ToListAsync();
+                foreach (var d in days)
+                {
+                    Console.WriteLine($"Day {d.TheDate.ToShortDateString()} - Appuntamenti: {d.Appuntamento.Count}");
+                }
 
                 var calendarioDays = new List<DayVM>();
 
@@ -43,10 +47,12 @@ namespace EngitelExam.Web.Services.Implementations
                 //            //IsAvailable is true se  "nessun nessuno soddisfa la condizione",(leggi tutto senza '!' e poi infine considera il ! invertendo il boolean)
                 //    }).ToList()
                 //};
-
+                
                 for (var date = firstDay; date <= lastDay; date = date.AddDays(1)) //è come un normale for fatto con i
                 {
-                    var dayInDb = days.FirstOrDefault(d => d.TheDate == date);
+                    //var dayInDb = days.FirstOrDefault(d => d.TheDate.Date == date.Date); //TheDate.Date xk io ho salvato in formato Date (no ore no minuti ect)(che altrimenti anche solo 1 sec di differenza allora non lo trova)
+                    var dayInDb = days.FirstOrDefault(d => d.TheDate >= date && d.TheDate < date.AddDays(1));
+                    //usa questo perche .Date su DateTime in C# non funziona bene per confronti EF / DB!!!
                     if (dayInDb != null)  //quindi esiste perche gia stato creato quel Day
                     {
                         calendarioDays.Add(new DayVM
@@ -101,47 +107,57 @@ namespace EngitelExam.Web.Services.Implementations
         {
             using (var db = new EngitelDbContext())
             {
-                //TODO wrappare dentro una transazione
-
                 db.Database.Log = msg => Console.WriteLine(msg);
 
-                var day = await db.Day.FirstOrDefaultAsync(d => d.DayId == model.DayId);
-                if (day == null)
+                using (var tx = db.Database.BeginTransaction())  //TRANSACTION, x multiple SaveChanges (EF lo fa in auto solo w 1). o tutto finisce bene o tutto finisce male (rollerback, torno a stato ok precedente)
                 {
-                    day = new Day
+                    try
                     {
-                        TheDate = model.Date   //passa anche la data!
-                    };
-                    db.Day.Add(day);
-                    await db.SaveChangesAsync();  //genera DayId
+                        var day = await db.Day.FirstOrDefaultAsync(d => d.DayId == model.DayId);
+                        if (day == null)
+                        {
+                            day = new Day
+                            {
+                                TheDate = model.Date   //passa anche la data!
+                            };
+                            db.Day.Add(day);
+                            await db.SaveChangesAsync();  //genera DayId
+                            model.DayId = day.DayId; //aggiorna!! importante!
+                        }
+
+                        bool exists = await db.Appuntamento.AnyAsync(a => a.DayId == day.DayId && a.Status == "Booked");
+                        if (exists) throw new InvalidOperationException("Giorno già prenotato");
+
+                        var famiglia = new Famiglia  //crei famiglia minima, cosi persiste su db. 
+                        {
+                            Nome = model.NomeFamiglia,
+                            Componenti = 0,
+                        };
+                        db.Famiglia.Add(famiglia);
+                        await db.SaveChangesAsync(); //genera lato db FamigliaId per l'entita
+                        var appuntamento = new Appuntamento  //crei appuntamento 'vuoto'
+                        {
+                            DayId = day.DayId,
+                            FamigliaId = famiglia.FamigliaId,
+                            Status = AppuntamentoStatus.Booked.ToString(),
+                        };
+                        db.Appuntamento.Add(appuntamento);
+                        await db.SaveChangesAsync();
+                        return new AppuntamentoVM
+                        {
+                            AppuntamentoId = appuntamento.AppuntamentoId,
+                            DayId = appuntamento.DayId,
+                            FamigliaId = famiglia.FamigliaId,
+                            Status = appuntamento.Status,
+                            NomeFamiglia = famiglia.Nome
+                        };
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
                 }
-
-                bool exists = await db.Appuntamento.AnyAsync(a => a.DayId == day.DayId && a.Status == "Booked");
-                if (exists) throw new InvalidOperationException("Giorno già prenotato");
-
-                var famiglia = new Famiglia  //crei famiglia minima, cosi persiste su db. 
-                {
-                    Nome = model.NomeFamiglia,
-                    Componenti = 0,
-                };
-                db.Famiglia.Add(famiglia);
-                await db.SaveChangesAsync(); //genera lato db FamigliaId per l'entita
-                var appuntamento = new Appuntamento  //crei appuntamento 'vuoto'
-                {
-                    DayId = day.DayId,
-                    FamigliaId = famiglia.FamigliaId,
-                    Status = AppuntamentoStatus.Booked.ToString(),
-                };
-                db.Appuntamento.Add(appuntamento);
-                await db.SaveChangesAsync();
-                return new AppuntamentoVM
-                {
-                    AppuntamentoId = appuntamento.AppuntamentoId,
-                    DayId = appuntamento.DayId,
-                    FamigliaId = famiglia.FamigliaId,
-                    Status = appuntamento.Status,
-                    NomeFamiglia = famiglia.Nome
-                };
             }
         }
 

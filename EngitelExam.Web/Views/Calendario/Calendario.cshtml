@@ -53,7 +53,8 @@
         </a>*@
                         @if (day.AppuntamentiCount > 0)
                         {
-                            <a class="btn btn-sm btn-outline-primary w-100" href="@Url.Action("Giorno", "Calendario", new { dayId = day.DayId })">
+                            <a class="btn btn-sm btn-outline-primary w-100"
+                               href="@(day.DayId == 0 ? "#" : Url.Action("Giorno", "Calendario", new { dayId = day.DayId }))" @(day.DayId == 0 ? "disabled" : "")>
                                 Details - (@day.AppuntamentiCount) appuntamenti
                             </a>
                         }

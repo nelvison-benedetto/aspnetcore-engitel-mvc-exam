@@ -51,10 +51,10 @@
           href="@(day.DayId == 0 ? "#" : Url.Action("Giorno", "Calendario", new { dayId = day.DayId }))"  @(day.DayId == 0 ? "disabled" : "")>
               Dettagli
         </a>*@
-                        <p>day.appuntamentiCount @day.AppuntamentiCount</p>
+                        @*<p>day.appuntamentiCount @day.AppuntamentiCount</p>
                         <p>day.DaiId  @day.DayId</p>
-                        <p>@day.Date</p>
-                        @*@if (day.AppuntamentiCount > 0)
+                        <p>@day.Date</p>*@
+                        @if (day.AppuntamentiCount > 0)
                         {
                             <a class="btn btn-sm btn-outline-primary w-100"
                                href="@(day.DayId == 0 ? "#" : Url.Action("Giorno", "Calendario", new { dayId = day.DayId }))" @(day.DayId == 0 ? "disabled" : "")>
@@ -66,7 +66,7 @@
                             <a class="btn btn-sm btn-primary w-100" href="@Url.Action("FissaAppuntamento", "Calendario", new { dayId = day.DayId, date = day.Date.ToString("yyyy-MM-dd") })">
                                 Nuovo appuntamento
                             </a> //usa formattazione ISO x no problems conversions
-                        }*@
+                        }
                     </div>
                 </div>
             </div>

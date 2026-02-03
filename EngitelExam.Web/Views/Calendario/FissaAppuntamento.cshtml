@@ -11,7 +11,7 @@
             @Html.HiddenFor(m => m.Date)
 
             <h2 class="mb-1">Fissa Appuntamento - Nome Famiglia</h2>
-            <p class="mb-3">Inserisci i dati riguardo il nome famiglia che si è prenotato per questo giorno.</p>
+            <p class="mb-3">Inserisci i dati riguardo il nome famiglia che si è prenotato per questo giorno <b>@Model.Date.ToString("dd/MM/yyyy")</b></p>
             @Html.ValidationSummary(
                 true,   // true = mostra SOLO errori model-level (here arrivano solo errori NON associati a proprietà) e.g.quelli che aggiungi w ModelState.AddModelError()
                 "",

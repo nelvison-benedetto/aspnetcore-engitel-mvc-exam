@@ -113,6 +113,7 @@ namespace EngitelExam.Web.Services.Implementations
                     .Include(d => d.Appuntamento.Select(a => a.Famiglia))
                     .FirstOrDefaultAsync(d => d.DayId == dayId);
                     //ottieni il giorno desiderato, e insieme tutti i suoi Appuntamenti, e per ciascun Appuntamento anche la sua Famiglia
+                    //quindi carichi tutto insieme sulla stessa query!!
                 if (day == null) return null;
                 return new GiornoVM
                 {

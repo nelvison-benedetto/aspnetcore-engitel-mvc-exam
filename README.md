@@ -17,3 +17,7 @@ Db Tabs: Day, Appuntamento, Famiglia, Person, Veicolo
 ![Reference11](./docs/readmefiles/carmanager11.png)
 ![Reference12](./docs/readmefiles/carmanager12.png)
 ![Reference13](./docs/readmefiles/carmanager13.png)
+![Reference14](./docs/readmefiles/carmanager14.png)
+![Reference15](./docs/readmefiles/carmanager15.png)
+![Reference16](./docs/readmefiles/carmanager16.png)
+![Reference17](./docs/readmefiles/carmanager17.png)

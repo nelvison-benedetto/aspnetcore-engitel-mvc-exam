@@ -8,14 +8,21 @@
     var firstDayOfMonth = new DateTime(Model.Year, Model.Month, 1);
     int startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;  //0=Sunday, 1=Monday, ect
 }
+@{
+    int prevMonth = Model.Month == 1 ? 12 : Model.Month - 1;
+    int prevYear = Model.Month == 1 ? Model.Year - 1 : Model.Year;
+
+    int nextMonth = Model.Month == 12 ? 1 : Model.Month + 1;
+    int nextYear = Model.Month == 12 ? Model.Year + 1 : Model.Year;
+}
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>@mesi[Model.Month - 1] @Model.Year</h2>
 
     <div>
-        <a href="@Url.Action("Calendario", new { year = Model.Year, month = Model.Month - 1 })"
+        <a href="@Url.Action("Calendario", new { year = prevYear, month = prevMonth })"
            class="btn btn-outline-primary btn-sm">&lt; Precedente</a>
-        <a href="@Url.Action("Calendario", new { year = Model.Year, month = Model.Month + 1 })"
+        <a href="@Url.Action("Calendario", new { year = nextYear, month = nextMonth })"
            class="btn btn-outline-primary btn-sm">Successivo &gt;</a>
     </div>
 </div>
@@ -48,12 +55,12 @@
                     <span class="badge @badgeClass">@day.AppuntamentiCount appuntamenti</span>
                     <div class="mt-2">
                         @*<a class="btn btn-sm btn-outline-primary w-100"
-          href="@(day.DayId == 0 ? "#" : Url.Action("Giorno", "Calendario", new { dayId = day.DayId }))"  @(day.DayId == 0 ? "disabled" : "")>
-              Dettagli
-        </a>*@
+                              href="@(day.DayId == 0 ? "#" : Url.Action("Giorno", "Calendario", new { dayId = day.DayId }))"  @(day.DayId == 0 ? "disabled" : "")>
+                                  Dettagli
+                            </a>*@
                         @*<p>day.appuntamentiCount @day.AppuntamentiCount</p>
-                        <p>day.DaiId  @day.DayId</p>
-                        <p>@day.Date</p>*@
+                            <p>day.DaiId  @day.DayId</p>
+                            <p>@day.Date</p>*@
                         @if (day.AppuntamentiCount > 0)
                         {
                             <a class="btn btn-sm btn-outline-primary w-100"
@@ -65,7 +72,7 @@
                         {
                             <a class="btn btn-sm btn-primary w-100" href="@Url.Action("FissaAppuntamento", "Calendario", new { dayId = day.DayId, date = day.Date.ToString("yyyy-MM-dd") })">
                                 Nuovo appuntamento
-                            </a> //usa formattazione ISO x no problems conversions
+                            </a>//usa formattazione ISO x no problems conversions
                         }
                     </div>
                 </div>

@@ -12,7 +12,7 @@ namespace EngitelExam.Web.Services.Contracts
     {
         Task<CalendarioVM> GetCalendarioMeseAsync(int year, int month);
         Task<IEnumerable<AppuntamentoVM>> GetAppuntamentiPerGiornoAsync(int dayId);
-        Task<AppuntamentoVM> AddAppuntamentoAsync(int dayId, int famigliaId);
+        //Task<AppuntamentoVM> AddAppuntamentoAsync(int dayId, int famigliaId);
         Task CancelAppuntamentoAsync(int appuntamentoId);
         Task<AppuntamentoVM> FissaAppuntamentoAsync(FissaAppuntamentoVM model);
     }

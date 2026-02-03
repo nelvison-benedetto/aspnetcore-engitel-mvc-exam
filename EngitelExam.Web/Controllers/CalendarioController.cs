@@ -35,7 +35,7 @@ namespace EngitelExam.Web.Controllers
             var calendario = await _calendarioService.GetCalendarioMeseAsync(y, m);
             return View(calendario);
         }
-
+        
         [HttpGet]
         public async Task<ActionResult> Giorno(int dayId)
         {
@@ -53,13 +53,6 @@ namespace EngitelExam.Web.Controllers
         //}
 
         [HttpGet]
-        public async Task<ActionResult> Cancel(int appuntamentoId)
-        {
-            await _calendarioService.CancelAppuntamentoAsync(appuntamentoId);
-            return RedirectToAction(nameof(Calendario));
-        }
-
-        [HttpGet]
         public ActionResult FissaAppuntamento(int dayId)
         {
             return View( new FissaAppuntamentoVM { DayId = dayId } );
@@ -69,9 +62,16 @@ namespace EngitelExam.Web.Controllers
         public async Task<ActionResult> FissaAppuntamento(FissaAppuntamentoVM model)
         {
             if (!ModelState.IsValid) return View(model);
-            var fissaappuntamento = _calendarioService.FissaAppuntamentoAsync(model);
+            var fissaappuntamento = await _calendarioService.FissaAppuntamentoAsync(model);
             if(fissaappuntamento == null ) return HttpNotFound();
             return RedirectToAction(nameof(Calendario));  //TODO savare NomeFamiglia su db!! magari su tab a partes
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Cancel(int appuntamentoId)
+        {
+            await _calendarioService.CancelAppuntamentoAsync(appuntamentoId);
+            return RedirectToAction(nameof(Calendario));
         }
 
     }

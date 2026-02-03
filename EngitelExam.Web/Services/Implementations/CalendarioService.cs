@@ -87,7 +87,7 @@ namespace EngitelExam.Web.Services.Implementations
                     .Where(a=> a.DayId == dayId)
                     .Include(a=>a.Famiglia)
                     .ToListAsync();
-                return appuntamenti.Select(a=> new AppuntamentoVM { 
+                return appuntamenti.Select(a=> new AppuntamentoVM {  //copy & paste in AppuntamentoVM per ciscuno dei appuntamenti trovati prima
                     AppuntamentoId = a.AppuntamentoId,
                     DayId = a.DayId,
                     FamigliaId = a.FamigliaId,
@@ -102,11 +102,22 @@ namespace EngitelExam.Web.Services.Implementations
             using (var db = new EngitelDbContext())
             {
                 db.Database.Log = msg => Console.WriteLine(msg);
+
+                bool exists = await db.Appuntamento.AnyAsync(a => a.DayId == model.DayId && a.Status == "Booked");
+                if (exists) throw new InvalidOperationException("Giorno già prenotato");
+
+                var famiglia = new Famiglia  //crei famiglia minima, cosi persiste su db. 
+                {
+                    Nome = model.NomeFamiglia,
+                    Componenti = 0,
+                };
+                db.Famiglia.Add(famiglia);
+                await db.SaveChangesAsync(); //genera lato db FamigliaId per l'entita
                 var appuntamento = new Appuntamento  //crei appuntamento 'vuoto'
                 {
                     DayId = model.DayId,
+                    FamigliaId = famiglia.FamigliaId,
                     Status = AppuntamentoStatus.Booked.ToString(),
-                    FamigliaId = null,
                 };
                 db.Appuntamento.Add(appuntamento);
                 await db.SaveChangesAsync();
@@ -114,37 +125,38 @@ namespace EngitelExam.Web.Services.Implementations
                 {
                     AppuntamentoId = appuntamento.AppuntamentoId,
                     DayId = appuntamento.DayId,
-                    FamigliaId = appuntamento.FamigliaId,
+                    FamigliaId = famiglia.FamigliaId,
                     Status = appuntamento.Status,
-                    NomeFamiglia = model.NomeFamiglia  //temporaneo, per la view
+                    NomeFamiglia = famiglia.Nome
                 };
             }
         }
 
-        public async Task<AppuntamentoVM> AddAppuntamentoAsync(int dayId, int famigliaId)
-        {
-            using (var db = new EngitelDbContext())
-            {
-                db.Database.Log = msg => Console.WriteLine(msg);
-                var day = db.Day.FindAsync(dayId);
-                if (day == null) return null;
-                var appuntamento = new Appuntamento
-                {
-                    DayId = dayId,
-                    FamigliaId = famigliaId,
-                    Status = AppuntamentoStatus.Booked.ToString(),  //uso di enum
-                };
-                db.Appuntamento.Add(appuntamento);
-                await db.SaveChangesAsync();
-                return new AppuntamentoVM
-                {
-                    AppuntamentoId = appuntamento.AppuntamentoId,
-                    FamigliaId = appuntamento.FamigliaId,
-                    DayId = appuntamento.DayId,
-                    Status = appuntamento.Status,
-                };
-            }
-        }
+        //non serve piu, tutta la logica ora la fai in FissaAppuntamentoAsync()
+        //public async Task<AppuntamentoVM> AddAppuntamentoAsync(int dayId, int famigliaId)
+        //{
+        //    using (var db = new EngitelDbContext())
+        //    {
+        //        db.Database.Log = msg => Console.WriteLine(msg);
+        //        var day = db.Day.FindAsync(dayId);
+        //        if (day == null) return null;
+        //        var appuntamento = new Appuntamento
+        //        {
+        //            DayId = dayId,
+        //            FamigliaId = famigliaId,
+        //            Status = AppuntamentoStatus.Booked.ToString(),  //uso di enum
+        //        };
+        //        db.Appuntamento.Add(appuntamento);
+        //        await db.SaveChangesAsync();
+        //        return new AppuntamentoVM
+        //        {
+        //            AppuntamentoId = appuntamento.AppuntamentoId,
+        //            FamigliaId = appuntamento.FamigliaId,
+        //            DayId = appuntamento.DayId,
+        //            Status = appuntamento.Status,
+        //        };
+        //    }
+        //}
 
         public async Task CancelAppuntamentoAsync(int appuntamentoId)
         {

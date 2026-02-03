@@ -31,7 +31,7 @@ namespace EngitelExam.Web.Controllers
         {
             return View();
         }
-
+        
         //here non metto async Task xk intanto non uso DB! quindi non fetcho nulla
         [HttpGet]
         public ActionResult Step1(int dayId, int? appuntamentoId)
@@ -90,8 +90,8 @@ namespace EngitelExam.Web.Controllers
             {
                 var step1 = Session["Step1"] as Step1FamigliaVM;
                 var step2 = Session["Step2"] as Step2VeicoliVM;
+                if(step1 == null || step2 == null) return RedirectToAction(nameof(Step1));
                 int famigliaId = await _famigliaService.SaveFamigliaAsync(step1, step2);
-                await _calendarioService.AddAppuntamentoAsync(step1.DayId, famigliaId);
                 //creo appuntamento legato a quel giorno!!!
                 Session.Clear();  //PULISCI SESSIONE!!
                 return RedirectToAction(nameof(Elenco));

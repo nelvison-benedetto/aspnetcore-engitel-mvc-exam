@@ -42,18 +42,17 @@ namespace EngitelExam.Web.Services.Implementations
                 db.Database.Log = msg => Console.WriteLine(msg);
 
                 var appuntamento = await db.Appuntamento
-                    .FindAsync(step1.AppuntamentoId);
+                    .Include(a => a.Famiglia)
+                    .FirstOrDefaultAsync(a => a.AppuntamentoId == step1.AppuntamentoId);
                 if (appuntamento == null || appuntamento.Status != AppuntamentoStatus.Booked.ToString())
                 {
                     throw new InvalidOperationException( "Appuntamento non valido o già completato");
                 }
-                
-                var famiglia = new Famiglia
-                {
-                    Nome = step1.NomeFamiglia,
-                    Componenti = step1.NumeroComponenti
-                };
-                db.Famiglia.Add(famiglia);  //aggiungi, cmnq non ancora salvate su db.
+
+                //completi i dati parziali che erano gia stati presi durante il 'pre-appuntamento' (solo info nome famiglia)
+                var famiglia = appuntamento.Famiglia;
+                famiglia.Nome = step1.NomeFamiglia;
+                famiglia.Componenti = step1.NumeroComponenti;
 
                 appuntamento.Status = AppuntamentoStatus.Completed.ToString();
 

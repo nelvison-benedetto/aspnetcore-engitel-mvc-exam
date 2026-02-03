@@ -59,7 +59,7 @@
                         }
                         else
                         {
-                            <a class="btn btn-sm btn-success w-100" href="@Url.Action("Step1", "Famiglia", new { dayId = day.DayId })">
+                            <a class="btn btn-sm btn-primary w-100" href="@Url.Action("FissaAppuntamento", "Calendario", new { dayId = day.DayId, date = day.Date })">
                                 Nuovo appuntamento
                             </a>
                         }

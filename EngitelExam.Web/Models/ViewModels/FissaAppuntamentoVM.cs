@@ -11,6 +11,8 @@ namespace EngitelExam.Web.Models.ViewModels
 
         public int DayId { get; set; }
 
+        public DateTime Date { get; set; }
+
         [Display(Name = "Nome della famiglia")]  //renderizzato da LabelFor in view razor (Step1.cshtml)
         [Required, StringLength(50)]
         public string NomeFamiglia { get; set; }

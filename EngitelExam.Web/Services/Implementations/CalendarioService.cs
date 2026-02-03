@@ -101,7 +101,20 @@ namespace EngitelExam.Web.Services.Implementations
         {
             using (var db = new EngitelDbContext())
             {
+                //TODO wrappare dentro una transazione
+
                 db.Database.Log = msg => Console.WriteLine(msg);
+
+                var day = await db.Day.FirstOrDefaultAsync(d => d.DayId == model.DayId);
+                if (day == null)
+                {
+                    day = new Day
+                    {
+                        TheDate = model.Date   //passa anche la data!
+                    };
+                    db.Day.Add(day);
+                    await db.SaveChangesAsync();  //genera DayId
+                }
 
                 bool exists = await db.Appuntamento.AnyAsync(a => a.DayId == model.DayId && a.Status == "Booked");
                 if (exists) throw new InvalidOperationException("Giorno già prenotato");

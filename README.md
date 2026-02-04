@@ -14,7 +14,7 @@ session-based workflows, and relational constraints.
 ## 🛠️ Technologies Used
 
 - **ASP.NET MVC 5** – Web framework (Model-View-Controller)
-- **.NET Framework** – Runtime platform
+- **.NET Framework** – Runtime platform (if the project template is missing, install the **Advanced ASP.NET Features** and **.NET Framework Project and Item Templates** via VS’s Individual Components)
 - **Entity Framework 6** – ORM (Database First)
 - **SQL Server** – Relational database
 - **Razor** – Server-side templating engine

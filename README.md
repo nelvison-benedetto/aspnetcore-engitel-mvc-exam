@@ -44,7 +44,7 @@ The application follows a classic layered MVC architecture:
 - Navigation properties used for relationships
 - Explicit Include() for eager loading
 - Asynchronous queries (async / await)
-- EF manages transactions automatically per SaveChanges() call, if you want use multiple SaveChanges within the same open connection, wrap all in a explicit Trasaction.
+- EF manages transactions automatically per SaveChanges() call, if you want use multiple SaveChanges within the same open connection, wrap all in a explicit Transaction.
 
 ---
 ## 🛡️ Validation & Error Handling
